@@ -44,9 +44,8 @@ print("RedNet started. Computer's host: ColonyCommunicator. Watching for EndTask
 
 --Main program stratup
 local checkInterval = 60 --in sec
-local logs = fs.open("ColonyCommunication/systemLogs.logs", "w")
 function colonyWarper()  -- little so that we can send throught our arguments.
-    colonyCheck.startCheck(logs, mainMonitor, mainMonitorHandler, checkInterval, meBridge, colony, requestWatcher,
+    colonyCheck.startCheck(mainMonitor, mainMonitorHandler, checkInterval, meBridge, colony, requestWatcher,
         helpers)
 end
 

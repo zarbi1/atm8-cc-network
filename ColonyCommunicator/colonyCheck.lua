@@ -1,7 +1,8 @@
-local function startCheck(logs, mainMonitor, mainMonitorHandler, interval, meBridge, colony, requestWatcher, helpers)
+local function startCheck(mainMonitor, mainMonitorHandler, interval, meBridge, colony, requestWatcher, helpers)
     print("Job Started.")
     while true do
-        local uncraftableItems = {} --names only, represent the list of items
+        local logs = fs.open("ColonyCommunication/systemLogs.logs", "w") -- clear the logs
+        local uncraftableItems = {}                                      --names only, represent the list of items
         logs.writeLine("Starting Computing....")
         --UPDATE: only check at night
         logs.writeLine("Checking for requests...")
@@ -16,6 +17,7 @@ local function startCheck(logs, mainMonitor, mainMonitorHandler, interval, meBri
             --first go through the requested items and check if they are in the applied storage
             --first get all the items that are in the applied storage and create a hashtable -> because getItem() bugs when the item is not present
             local ae2Items = helpers.buildDic(meBridge.listItems())
+            logs.writeLine("Item list set.")
             for i = 1, table.getn(requests), 1 do
                 --check if it's in the applied storage and the correct amount
                 local itemName = requests[i].id
