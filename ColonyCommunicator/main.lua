@@ -41,18 +41,20 @@ rednet.open("back")
 rednet.host("EndTask", "ColonyCommunicator")
 print("RedNet started. Computer's host: ColonyCommunicator. Watching for EndTask signal")
 --end rednet startup
-
 --Main program stratup
+local logInterval = 10
 local checkInterval = 60 --in sec
+
 function colonyWarper()  -- little so that we can send throught our arguments.
     colonyCheck.startCheck(mainMonitor, mainMonitorHandler, checkInterval, meBridge, colony, requestWatcher,
-        helpers)
+        helpers, logInterval)
 end
 
 parallel.waitForAny(rednetBackground.checkForMessage, colonyWarper)
 --stop rednet
 rednet.unhost("EndTask", "ColonyCommunicator")
 rednet.close("back")
-logs.close()
+
+
 --clear monitor
 mainMonitor.clear()

@@ -1,9 +1,20 @@
-local function startCheck(mainMonitor, mainMonitorHandler, interval, meBridge, colony, requestWatcher, helpers)
+local function startCheck(mainMonitor, mainMonitorHandler, interval, meBridge, colony, requestWatcher, helpers,
+                          logInterval)
     print("Job Started.")
+    local logs = fs.open("ColonyCommunication/systemLogs.log", "w")
+
+    local nbLoopSinceLog = 0
     while true do
-        local logs = fs.open("ColonyCommunication/systemLogs.logs", "w") -- clear the logs
-        local uncraftableItems = {}                                      --names only, represent the list of items
-        logs.writeLine("Starting Computing....")
+        if logInterval == nbLoopSinceLog then
+            logs.close()
+            nbLoopSinceLog = 0
+            --clear the logs for the new loop
+            logs = fs.open("ColonyCommunication/systemLogs.log", "w")
+        end
+
+        local uncraftableItems = {} --names only, represent the list of items
+        logs.writeLine("LOOP NUMBER: " .. nbLoopSinceLog)
+        logs.writeLine("--------------Starting Computing....--------------")
         --UPDATE: only check at night
         logs.writeLine("Checking for requests...")
         local requests = requestWatcher.watchForRequests(colony)
@@ -21,10 +32,11 @@ local function startCheck(mainMonitor, mainMonitorHandler, interval, meBridge, c
             for i = 1, table.getn(requests), 1 do
                 --check if it's in the applied storage and the correct amount
                 local itemName = requests[i].id
-                local currentItem = { name = itemName }                                            --must cast into table
+                local currentItem = { name = itemName }                            --must cast into table
                 if ae2Items[itemName] == nil or ae2Items[itemName].amount < requests[i].count then -- item not found or not enougth
                     logs.writeLine("Item: " .. itemName ..
                         " was not found in the storage, or there is not enougth of it. Searching if craft exists...")
+
                     if not meBridge.isItemCraftable(currentItem) then
                         --add item to uncraftable list
                         uncraftableItems[itemName] = requests[i].count
@@ -60,8 +72,11 @@ local function startCheck(mainMonitor, mainMonitorHandler, interval, meBridge, c
         end
         --update Monitor
         mainMonitorHandler.displayOnMonitor(uncraftableItems, mainMonitor)
+        logs.writeLine("--------------Loop Ended--------------")
+        logs.flush()
+        nbLoopSinceLog = nbLoopSinceLog + 1
+        sleep(interval)
     end
-    sleep(interval)
 end
 
 return { startCheck = startCheck }
