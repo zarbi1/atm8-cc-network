@@ -9,13 +9,12 @@ local function MineColonyItemSelected(itemFrame, frame, item)
     uiHelpers.ItemFrameDataPointers.id:setText(item.args[1].id)
     uiHelpers.ItemFrameDataPointers.amount:setText(item.args[1].count)
     --compute percentage
-    local availability = math.floor((item.args[1].available / item.args[1].count)*100+0.5)
+    local availability = math.floor((item.args[1].available / item.args[1].count) * 100 + 0.5)
     uiHelpers.ItemFrameDataPointers.available:setProgress(availability)
-    uiHelpers.ItemFrameDataPointers.availableText:setText(item.args[1].available.." out of "..item.args[1].count)
+    uiHelpers.ItemFrameDataPointers.availableText:setText(item.args[1].available .. " out of " .. item.args[1].count)
 end
 
 local function RefreshUncraftableList(newList)
-    print(table.getn(newList))
     local uiHelpers = require("Helpers.uiHelpers")
     -- sperate the data if needed then push it
     local listLen = table.getn(newList)

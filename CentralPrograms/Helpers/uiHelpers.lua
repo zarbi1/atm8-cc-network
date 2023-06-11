@@ -24,7 +24,7 @@ local function RefreshReqList(req)
     ColonyFramePointers.uncraftListFrame:clear()
     --Now fill it with the new req
     for i = 1, table.getn(req), 1 do
-        ColonyFramePointers.uncraftListFrame:addItem(req[i].displayName, nil, nil, req[i])
+        ColonyFramePointers.uncraftListFrame:addItem("Item " .. i, nil, nil, req[i])
     end
 end
 

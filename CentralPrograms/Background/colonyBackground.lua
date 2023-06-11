@@ -49,7 +49,7 @@ local function startCheck(interval, meBridge, colony,
                         --add item to uncraftable list
 
                         uncraftableItems[itemName] = requests[i].count
-                        uncraftableItemsArgs = requests[i]
+                        table.insert(uncraftableItemsArgs, requests[i])
                         logs.writeLine("Item: " ..
                             itemName .. " is not craftable and has been added to the uncraftable list.")
                     else
